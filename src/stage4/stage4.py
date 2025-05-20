@@ -56,7 +56,17 @@ def format_ordered_list():
     return "\n".join([f"{i + 1}. {line}" for i, line in enumerate(lines)]) + "\n"
 
 def format_unordered_list():
-    pass
+    while True:
+        try:
+            rows = int(input("Number of rows: "))
+            if rows > 0:
+                break
+            else:
+                print("The number of rows should be greater than zero")
+        except ValueError:
+            print("Please enter a valid number")
+    lines = [input(f"Row#{x + 1}: ") for x in range(rows)]
+    return "\n".join([f"* {line}" for line in lines]) + "\n"
 
 
 text = ""
@@ -82,7 +92,7 @@ while True:
             case "inline-code": text += format_inline_code()
             case "new-line": text += format_new_line()
             case "link": text += format_link()
-            case "ordered-list": text += (lambda: format_ordered_list())()
+            case "ordered-list": text += format_ordered_list()
             case "unordered-list": text += format_unordered_list()
 
     print(text)

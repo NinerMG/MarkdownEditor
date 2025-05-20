@@ -71,3 +71,47 @@ class TestStage3(unittest.TestCase):
         self.assertIn("*italic*", output)
         self.assertIn("`code`", output)
         self.assertIn("\n", output)  # sprawdzenie, czy są nowe linie
+
+    def test_ordered_list_formatter(self):
+        output = self.run_stage4([
+            "ordered-list", "3",
+            "First item",
+            "Second item",
+            "Third item",
+            "!done"
+        ])
+        self.assertIn("1. First item", output)
+        self.assertIn("2. Second item", output)
+        self.assertIn("3. Third item", output)
+
+    def test_unordered_list_formatter(self):
+        output = self.run_stage4([
+            "unordered-list", "2",
+            "Item one",
+            "Item two",
+            "!done"
+        ])
+        self.assertIn("* Item one", output)
+        self.assertIn("* Item two", output)
+
+    def test_ordered_list_invalid_then_valid(self):
+        output = self.run_stage4([
+            "ordered-list", "0", "2",
+            "Valid one",
+            "Valid two",
+            "!done"
+        ])
+        self.assertIn("The number of rows should be greater than zero", output)
+        self.assertIn("1. Valid one", output)
+        self.assertIn("2. Valid two", output)
+
+    def test_unordered_list_invalid_then_valid(self):
+        output = self.run_stage4([
+            "unordered-list", "-1", "3",
+            "A", "B", "C",
+            "!done"
+        ])
+        self.assertIn("The number of rows should be greater than zero", output)
+        self.assertIn("* A", output)
+        self.assertIn("* B", output)
+        self.assertIn("* C", output)
